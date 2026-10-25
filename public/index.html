@@ -1,0 +1,267 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>SiteSherlock AI — Find website problems, fix them first</title>
+<meta name="description" content="SiteSherlock AI audits any website for broken links, SEO, accessibility and performance issues — explains every finding and tells you what to fix first.">
+<link rel="canonical" href="https://sitesherlock.vercel.app/">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="SiteSherlock AI">
+<meta property="og:title" content="SiteSherlock AI — Find website problems. Know what to fix next.">
+<meta property="og:description" content="Enter a URL. Sherlock crawls it safely, runs 30+ evidence-based checks and explains every issue in plain English — with the fix and what to do first.">
+<meta property="og:url" content="https://sitesherlock.vercel.app/">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="SiteSherlock AI — Website audit, explained">
+<meta name="twitter:description" content="30+ checks for broken links, SEO, accessibility, performance and launch readiness — every finding with evidence and a fix.">
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebApplication","name":"SiteSherlock AI",
+"url":"https://sitesherlock.vercel.app/","applicationCategory":"BusinessApplication",
+"operatingSystem":"Web","description":"AI-powered website audit platform: bounded safe crawl, 30+ deterministic checks, health score and a prioritised fix list.",
+"author":{"@type":"Person","name":"Kislay Kumar"},
+"offers":{"@type":"Offer","price":"0","priceCurrency":"INR"}}
+</script>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Ccircle cx='14' cy='14' r='9' fill='none' stroke='%23ffa582' stroke-width='4'/%3E%3Cline x1='20' y1='20' x2='28' y2='28' stroke='%23ffa582' stroke-width='4' stroke-linecap='round'/%3E%3C/svg%3E">
+<link href="https://api.fontshare.com/v2/css?f[]=general-sans@400,500,600,700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Onest:wght@500;600;700;800&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<header class="nav">
+  <a class="brand" href="#top" aria-label="SiteSherlock AI home">
+    <span class="brand-mark" aria-hidden="true"><svg viewBox="0 0 32 32"><circle cx="14" cy="14" r="9" fill="none" stroke="currentColor" stroke-width="3.4"/><line x1="20.5" y1="20.5" x2="28" y2="28" stroke="currentColor" stroke-width="3.4" stroke-linecap="round"/></svg></span>
+    <span>Site<b>Sherlock</b> <em>AI</em></span>
+  </a>
+  <nav class="nav-links" aria-label="Main">
+    <a href="#watch" data-roll>Watch</a>
+    <a href="#checks" data-roll>What we check</a>
+    <a href="#how" data-roll>How it works</a>
+    <a href="#pricing" data-roll>Pricing</a>
+    <a href="#history-section" data-roll>Scan history</a>
+  </nav>
+  <button class="btn btn-light btn-sm magnetic" id="nav-scan-btn" type="button">Audit a site</button>
+</header>
+
+<main id="top">
+  <!-- HERO + SCANNER -->
+  <section class="hero">
+    <p class="eyebrow reveal">AI-POWERED WEBSITE AUDIT <span class="theme-pill">V3 · PROFESSIONAL EDITION</span></p>
+    <h1 class="reveal">Find website <span class="flip-wrap" aria-label="problems"><span id="flip-word">problems</span></span>.<br><span class="serif-accent">Know what to fix next.</span></h1>
+    <p class="hero-sub reveal">Enter any website you own or have permission to test. Sherlock crawls it safely, runs evidence-based checks, and explains every issue in plain English — with the fix, the impact, and what to do first.</p>
+
+    <form id="scan-form" class="scan-box reveal">
+      <label class="sr-only" for="url-input">Website URL</label>
+      <input id="url-input" type="text" inputmode="url" placeholder="https://yourwebsite.com" autocomplete="url" spellcheck="false">
+      <select id="pages-select" aria-label="Maximum pages to check">
+        <option value="5">5 pages</option>
+        <option value="10" selected>10 pages</option>
+      </select>
+      <button class="btn btn-light magnetic" type="submit" id="scan-btn">Start audit</button>
+    </form>
+    <div class="hero-actions reveal">
+      <button class="btn btn-glass" id="demo-btn" type="button">View a demo report</button>
+      <p class="hero-note">No sign-up needed · Bounded, safe crawl · No exploit or security testing</p>
+    </div>
+    <p id="scan-error" class="scan-error" role="alert" hidden></p>
+
+    <div id="scan-progress" class="progress-card" hidden>
+      <div class="progress-head"><span class="spinner" aria-hidden="true"></span><b id="progress-title" class="kinetic">Scanning</b></div>
+      <ul id="progress-steps">
+        <li data-step="0">Validating the URL and checking it is safe to scan</li>
+        <li data-step="1">Crawling pages on the same domain (bounded)</li>
+        <li data-step="2">Checking links, metadata, headings, images and launch files (robots.txt, sitemap, 404)</li>
+        <li data-step="3">Checking accessibility and performance signals</li>
+        <li data-step="4">Writing your prioritised report</li>
+      </ul>
+    </div>
+
+    <div class="hero-stats reveal">
+      <div><b><span data-count="30">0</span>+</b><span>evidence-based checks</span></div>
+      <div><b><span data-count="7">0</span></b><span>audit categories</span></div>
+      <div><b><span data-count="10">0</span></b><span>pages per free scan</span></div>
+      <div><b><span data-count="0">0</span></b><span>invented findings — every issue cites evidence</span></div>
+    </div>
+  </section>
+
+  <!-- MARQUEE (Skiper/Vengeance style) -->
+  <div class="marquee" aria-hidden="true"><div class="marquee-track" id="marquee-track"></div></div>
+
+  <!-- RESULTS -->
+  <section id="results" class="results" hidden>
+    <div class="results-head">
+      <div>
+        <p class="eyebrow">AUDIT REPORT</p>
+        <h2 id="results-title">Results</h2>
+        <p id="results-meta" class="muted"></p>
+      </div>
+      <div class="results-actions">
+        <button class="btn btn-glass" id="copy-summary-btn" type="button">Copy summary</button>
+        <button class="btn btn-light" id="export-btn" type="button">Download report</button>
+        <button class="btn btn-glass" id="rescan-btn" type="button">Re-scan</button>
+      </div>
+    </div>
+
+    <div class="score-row">
+      <div class="score-card glass">
+        <svg class="ring" viewBox="0 0 120 120" aria-hidden="true">
+          <circle cx="60" cy="60" r="52" class="ring-bg"/>
+          <circle cx="60" cy="60" r="52" class="ring-fg" id="ring-fg"/>
+        </svg>
+        <div class="score-num"><b id="score-num">–</b><span>/ 100</span></div>
+        <p id="score-label" class="muted"></p>
+      </div>
+      <div class="summary-card glass">
+        <h3>Executive summary</h3>
+        <p id="summary-text"></p>
+        <p class="engine-note" id="summary-engine"></p>
+        <h4>Fix these first</h4>
+        <ol id="priority-list" class="priority-list"></ol>
+      </div>
+      <div class="cats-card glass">
+        <h3>By category</h3>
+        <div id="category-bars"></div>
+        <h3 class="mt">By severity</h3>
+        <div id="severity-pills" class="sev-pills"></div>
+      </div>
+    </div>
+
+    <div class="filters" role="group" aria-label="Filter findings">
+      <input id="filter-search" type="search" aria-label="Search findings" placeholder="Search findings, pages, evidence…">
+      <select id="filter-category" aria-label="Filter by category"><option value="">All categories</option></select>
+      <select id="filter-severity" aria-label="Filter by severity">
+        <option value="">All severities</option><option value="high">High</option>
+        <option value="medium">Medium</option><option value="low">Low</option>
+      </select>
+      <span id="filter-count" class="muted"></span>
+    </div>
+
+    <div id="findings-list" class="findings"></div>
+    <p id="no-findings" class="empty" hidden>No findings match these filters.</p>
+
+    <h3 class="section-h">Pages checked</h3>
+    <div class="table-wrap glass"><table class="pages-table">
+      <thead><tr><th>Page</th><th>Status</th><th>Response</th><th>Size</th><th>Title</th><th>Words</th></tr></thead>
+      <tbody id="pages-body"></tbody>
+    </table></div>
+    <p class="disclaimer">Automated checks catch only part of accessibility and quality issues — human review still matters. Performance figures are response-time signals from this scan, not full Core Web Vitals. This report is not a security audit and does not guarantee search rankings.</p>
+  </section>
+
+  <!-- WORD REVEAL (Skiper TextBoxReveal style) -->
+  <section class="section reveal-section">
+    <p class="eyebrow">THE SHERLOCK PROMISE</p>
+    <p class="reveal-text" id="reveal-text">Most audit tools dump a list of errors and leave you guessing. Sherlock shows the evidence, explains why it matters in plain English, and tells you exactly what to fix first — so a better website is never a mystery.</p>
+  </section>
+
+  <!-- WATCH HOW IT WORKS -->
+  <section id="watch" class="section">
+    <p class="eyebrow reveal">WATCH HOW IT WORKS</p>
+    <h2 class="reveal">See Sherlock <span class="serif-accent">in action</span></h2>
+    <p class="muted reveal" style="max-width:640px;line-height:1.65">An 80-second walkthrough in English: enter a URL, watch the safe crawl, see the 33 checks run, and read a score that tells you what to fix first.</p>
+    <div class="video-wrap reveal">
+      <video controls preload="metadata" poster="/poster.png" src="https://muse.ai/files/1338677119328942/1031059093328291/c9x8p0fdyp4ywyajdq7q22kv/sitesherlock-explainer.mp4">
+        Your browser does not support embedded video.
+        <a href="https://muse.ai/files/1338677119328942/1031059093328291/c9x8p0fdyp4ywyajdq7q22kv/sitesherlock-explainer.mp4">Download the walkthrough video</a>.
+      </video>
+    </div>
+    <p class="muted center reveal" style="margin-top:14px">If the player does not start on your network, <a href="https://muse.ai/files/1338677119328942/1031059093328291/c9x8p0fdyp4ywyajdq7q22kv/sitesherlock-explainer.mp4">download the 80-second video (MP4)</a> and watch it directly.</p>
+  </section>
+
+  <!-- WHAT WE CHECK (numbered editorial rows) -->
+  <section id="checks" class="section">
+    <p class="eyebrow reveal">THE CASE FILE</p>
+    <h2 class="reveal">What Sherlock <span class="serif-accent">investigates</span></h2>
+    <div class="check-rows">
+      <article class="check-row reveal"><span class="num">01</span><div><h3>Broken &amp; unsafe links</h3><p>Every internal link is followed; external links are spot-checked for 404s, unreachable targets and plain-http destinations.</p></div><span class="count">3 CHECKS</span></article>
+      <article class="check-row reveal"><span class="num">02</span><div><h3>SEO &amp; metadata</h3><p>Titles and descriptions (missing, duplicated, over-long), canonicals, Open Graph tags and structured data.</p></div><span class="count">9 CHECKS</span></article>
+      <article class="check-row reveal"><span class="num">03</span><div><h3>Launch readiness</h3><p>The files search engines look for first: robots.txt present and not blocking the site, an XML sitemap, and honest 404 behaviour with a real error page.</p></div><span class="count">5 CHECKS</span></article>
+      <article class="check-row reveal"><span class="num">04</span><div><h3>Accessibility</h3><p>Missing alt text, unlabelled form fields, links with no readable text, and a missing page language.</p></div><span class="count">4 CHECKS</span></article>
+      <article class="check-row reveal"><span class="num">05</span><div><h3>Content structure</h3><p>One clear H1 per page, heading levels in order, and enough real content on a page to judge it by.</p></div><span class="count">4 CHECKS</span></article>
+      <article class="check-row reveal"><span class="num">06</span><div><h3>Performance &amp; images</h3><p>Server response time and page weight, plus image delivery: modern formats, lazy loading and reserved dimensions.</p></div><span class="count">5 CHECKS</span></article>
+      <article class="check-row reveal"><span class="num">07</span><div><h3>Usability &amp; safety signals</h3><p>Mobile viewport, HTTPS everywhere, and common protective response headers — hardening signals, not a penetration test.</p></div><span class="count">3 CHECKS</span></article>
+    </div>
+  </section>
+
+  <!-- PRE-LAUNCH CHECKLIST -->
+  <section class="section">
+    <p class="eyebrow reveal">BEFORE YOU PUBLISH</p>
+    <h2 class="reveal">The pre-launch list, <span class="serif-accent">automated</span></h2>
+    <p class="muted reveal" style="max-width:640px;line-height:1.65">The checks experienced developers run by hand before a site goes live — Sherlock runs all of them on every scan, with evidence.</p>
+    <div class="launch-list reveal">
+      <div><b>robots.txt in place</b><span>CHECKED</span></div>
+      <div><b>XML sitemap present</b><span>CHECKED</span></div>
+      <div><b>Unique title on every page</b><span>CHECKED</span></div>
+      <div><b>Meta descriptions written</b><span>CHECKED</span></div>
+      <div><b>Exactly one H1 per page</b><span>CHECKED</span></div>
+      <div><b>Canonical tags set</b><span>CHECKED</span></div>
+      <div><b>Open Graph tags for sharing</b><span>CHECKED</span></div>
+      <div><b>Real 404 page, real 404 status</b><span>CHECKED</span></div>
+      <div><b>Alt text on images</b><span>CHECKED</span></div>
+      <div><b>WebP / AVIF image formats</b><span>CHECKED</span></div>
+      <div><b>Lazy loading below the fold</b><span>CHECKED</span></div>
+      <div><b>Organisation structured data</b><span>CHECKED</span></div>
+    </div>
+  </section>
+
+  <!-- HOW -->
+  <section id="how" class="section">
+    <p class="eyebrow reveal">THE METHOD</p>
+    <h2 class="reveal">How it <span class="serif-accent">works</span></h2>
+    <ol class="steps">
+      <li class="reveal"><span class="n">1</span><b>You enter a URL</b><span>We validate it and block private/internal addresses before anything is fetched.</span></li>
+      <li class="reveal"><span class="n">2</span><b>Bounded crawl</b><span>Same domain only, limited pages, depth, size and time. Your site is never hammered.</span></li>
+      <li class="reveal"><span class="n">3</span><b>Deterministic checks</b><span>33 rules produce structured findings with evidence — the AI never invents a detection.</span></li>
+      <li class="reveal"><span class="n">4</span><b>Grounded AI summary</b><span>The explanation layer turns findings into a prioritised fix list that cites finding IDs.</span></li>
+    </ol>
+  </section>
+
+  <!-- HISTORY -->
+  <section id="history-section" class="section">
+    <p class="eyebrow reveal">CASE ARCHIVE</p>
+    <h2 class="reveal">Scan history</h2>
+    <p class="muted reveal">Your past audits, saved on this server. Open one to compare after you fix things.</p>
+    <div id="history-list" class="history"><p class="muted">Loading…</p></div>
+  </section>
+
+  <!-- PRICING (table, not cards) -->
+  <section id="pricing" class="section">
+    <p class="eyebrow reveal">PRICING</p>
+    <h2 class="reveal">Simple, <span class="serif-accent">honest</span> plans</h2>
+    <div class="price-table reveal">
+      <article class="price-row"><div><h3>Free</h3><p class="who">For learners and first checks</p></div><p class="amount">₹0</p><ul><li>A few small scans a month</li><li>Up to 10 pages per scan</li><li>Full evidence-based report</li></ul></article>
+      <article class="price-row pro"><div><p class="plan-tag">MOST POPULAR</p><h3>Pro</h3><p class="who">For freelancers and solo developers</p></div><p class="amount">₹499<span>/month</span></p><ul><li>More scans and pages</li><li>Full scan history and comparisons</li><li>Branded HTML reports</li></ul></article>
+      <article class="price-row"><div><h3>Agency</h3><p class="who">For small agencies</p></div><p class="amount">₹1,499<span>/month</span></p><ul><li>Multiple client projects</li><li>Client branding</li><li>Recurring scans (coming soon)</li></ul></article>
+    </div>
+    <p class="muted center reveal">Prices are illustrative for this portfolio build — billing is not switched on yet.</p>
+  </section>
+
+  <!-- PORTFOLIO / HONESTY -->
+  <section class="section">
+    <p class="eyebrow reveal">UNDER THE MAGNIFYING GLASS</p>
+    <h2 class="reveal">Built like a <span class="serif-accent">real product</span></h2>
+    <div class="plain-cols">
+      <article class="reveal"><h3>Architecture</h3><p>FastAPI backend · bounded Python crawler · deterministic rule scanners · grounded AI summary · SQLite scan history · vanilla JS dashboard.</p></article>
+      <article class="reveal"><h3>Security by design</h3><p>SSRF protection on every fetch and redirect, private-IP blocking, crawl limits, and no exploit testing — ever.</p></article>
+      <article class="reveal"><h3>Evaluation</h3><p>Rule scanners are unit-tested against HTML fixtures with known issues; AI summaries are rejected if they cite a finding that does not exist.</p></article>
+    </div>
+  </section>
+</main>
+
+<footer class="footer">
+  <p><b>SiteSherlock AI</b> — Find website problems, understand their impact, and know what to fix next.</p>
+  <p class="muted">Only scan websites you own or have permission to test. · Portfolio project by Kislay Kumar</p>
+  <p class="credits">v3 Professional Edition — matte surfaces, hairline rules, one accent, no AI-cliché patterns · Interaction patterns recreated in vanilla JS, inspired by <a href="https://skiper-ui.com" target="_blank" rel="noopener">Skiper UI</a> and <a href="https://www.vengeanceui.com" target="_blank" rel="noopener">Vengeance UI</a> · Early theme inspiration: <a href="https://www.getlayers.ai/" target="_blank" rel="noopener">GetLayers</a></p>
+</footer>
+
+<!-- FLOATING DOCK (Vengeance style) -->
+<nav class="dock" aria-label="Quick navigation">
+  <a href="#top" data-tip="Audit" aria-label="Go to audit form"><svg viewBox="0 0 32 32"><circle cx="14" cy="14" r="8.5" fill="none" stroke="currentColor" stroke-width="3"/><line x1="20.5" y1="20.5" x2="27" y2="27" stroke="currentColor" stroke-width="3" stroke-linecap="round"/></svg></a>
+  <a href="#watch" data-tip="Watch" aria-label="Watch how it works"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5.5v13l11-6.5z"/></svg></a>
+  <a href="#checks" data-tip="Checks" aria-label="What we check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M4 12.5l5 5L20 6.5"/></svg></a>
+  <a href="#how" data-tip="Method" aria-label="How it works"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3.5 2"/></svg></a>
+  <a href="#pricing" data-tip="Pricing" aria-label="Pricing"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M6 3h12M6 8.5h12M6 13.5c6.5 0 9.5 1.8 9.5 5.5M9.5 13.5L15 21"/></svg></a>
+  <a href="#history-section" data-tip="History" aria-label="Scan history"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M4 5.5A9 9 0 1 1 3.6 14"/><path d="M4 2v4h4M12 8v4.5l3 2"/></svg></a>
+</nav>
+
+<script src="app.js"></script>
+</body>
+</html>
